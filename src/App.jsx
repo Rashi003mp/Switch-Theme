@@ -1,36 +1,39 @@
-import { useState } from "react";
+import React, { useEffect, useState } from 'react'
+
+
+
 
 function App() {
-  const [isDark, setIsDark] = useState(false);
+let [quates,setQuates]=useState([])
 
-  const toggleTheme = () => {
-    setIsDark(prev => !prev);
-  };
-
-  const appStyle = {
-    height: "100vh",
-    width: "100vw", 
-    backgroundColor: isDark ? "#111" : "#fff",
-    color: isDark ? "#fff" : "#000",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+useEffect(()=>{
+  fetch('https://dummyjson.com/quotes')
+  .then(res=>res.json())
+  .then((data)=>{
+   const first10=data.quotes.slice(0,10)
+    setQuates(first10)
+    console.log(first10);
+    
   
-  };
-  const buttonstyle={
-    backgroundColor:isDark?"#fff":'#111',
-    color:isDark?'#111':"#fff"
-  }
+  
+    
+  })
 
+  .catch((error)=>{
+    console.error('error fetching quates:',error)
+  })
+},[])
   return (
-    <div style={appStyle}>
-      <h3>{isDark ? "Dark Theme" : "White Theme"}</h3>
-      <button style={buttonstyle} onClick={toggleTheme}>
-        Switch Theme
-      </button>
+    <div>
+      <h2>Top 10 Quates</h2>
+      <h1>
+      {quates.map((q)=>{
+        return <li key={q.id}>{q.quote}</li>
+      })}
+      </h1>
+     
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
